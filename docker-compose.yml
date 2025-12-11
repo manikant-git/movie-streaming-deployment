@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  api-gateway:
+    container_name: movie-streaming-api-gateway
+    image: golang:1.21-alpine
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+    networks:
+      - movie-streaming-net
+    depends_on:
+      - movie-service
+      - user-service
+      - streaming-service
+      - search-service
+
+  movie-service:
+    container_name: movie-streaming-movie
+    image: golang:1.21-alpine
+    build:
+      context: ./movie-service
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      - PORT=8081
+    networks:
+      - movie-streaming-net
+
+  user-service:
+    container_name: movie-streaming-user
+    image: golang:1.21-alpine
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    environment:
+      - PORT=8082
+    networks:
+      - movie-streaming-net
+
+  streaming-service:
+    container_name: movie-streaming-stream
+    image: golang:1.21-alpine
+    build:
+      context: ./streaming-service
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8083"
+    environment:
+      - PORT=8083
+    networks:
+      - movie-streaming-net
+
+  search-service:
+    container_name: movie-streaming-search
+    image: golang:1.21-alpine
+    build:
+      context: ./search-service
+      dockerfile: Dockerfile
+    ports:
+      - "8084:8084"
+    environment:
+      - PORT=8084
+    networks:
+      - movie-streaming-net
+
+networks:
+  movie-streaming-net:
+    driver: bridge
